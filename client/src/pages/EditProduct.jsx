@@ -19,7 +19,7 @@ function EditProduct() {
   useEffect(() => {
 
     axios
-      .get("http://ecommerce-project-qvh0.onrender.com/products")
+      .get("https://ecommerce-project-qvh0.onrender.com/products")
 
       .then((response) => {
 
@@ -55,7 +55,7 @@ function EditProduct() {
 
       const response = await axios.put(
 
-        `http://https://ecommerce-project-qvh0.onrender.com/update-product/${id}`,
+        `https://ecommerce-project-qvh0.onrender.com/update-product/${id}`,
 
         {
           name,
