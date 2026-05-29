@@ -19,7 +19,7 @@ function Login() {
     try {
 
       const response = await axios.post(
-        "http://https://ecommerce-project-qvh0.onrender.com/login",
+        "http://ecommerce-project-qvh0.onrender.com/login",
         {
           email,
           password
