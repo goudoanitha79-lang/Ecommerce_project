@@ -18,13 +18,15 @@ app.use("/uploads", express.static("uploads"));
 
 const db = mysql.createConnection({
 
-  host: "localhost",
+  host: process.env.MYSQLHOST,
 
-  user: "root",
+  user: process.env.MYSQLUSER,
 
-  password: "",
+  password: process.env.MYSQLPASSWORD,
 
-  database: "ecommerce_db"
+  database: process.env.MYSQLDATABASE,
+
+  port: process.env.MYSQLPORT
 
 });
 
