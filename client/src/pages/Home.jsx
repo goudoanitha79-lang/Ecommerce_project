@@ -15,7 +15,7 @@ function Home() {
   useEffect(() => {
 
     axios
-      .get("http://ecommerce-project-qvh0.onrender.com/products")
+      .get("https://ecommerce-project-qvh0.onrender.com/products")
       .then((response) => {
 
         setProducts(response.data);
