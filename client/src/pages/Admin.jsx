@@ -17,7 +17,7 @@ function Admin() {
   const fetchProducts = () => {
 
     axios
-      .get("http://localhost:5000/products")
+      .get("http://https://ecommerce-project-qvh0.onrender.com/products")
 
       .then((response) => {
 
@@ -57,7 +57,7 @@ function Admin() {
 
       const response = await axios.post(
 
-        "http://localhost:5000/add-product",
+        "http://https://ecommerce-project-qvh0.onrender.com/add-product",
 
         formData,
 
@@ -89,7 +89,7 @@ function Admin() {
 
       const response = await axios.delete(
 
-        `http://localhost:5000/delete-product/${id}`
+        `http://https://ecommerce-project-qvh0.onrender.com/delete-product/${id}`
 
       );
 
@@ -214,7 +214,7 @@ function Admin() {
             >
 
               <img
-                src={`http://localhost:5000/uploads/${product.image}`}
+                src={`http://https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
                 alt={product.name}
                 style={{
                   width: "100%",
