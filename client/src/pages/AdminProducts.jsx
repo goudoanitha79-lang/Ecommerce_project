@@ -19,7 +19,7 @@ function AdminProducts() {
   const fetchProducts = () => {
 
     axios
-      .get("http://ecommerce-project-qvh0.onrender.com/products")
+      .get("https://ecommerce-project-qvh0.onrender.com/products")
       .then((response) => {
 
         setProducts(response.data);
@@ -38,7 +38,7 @@ function AdminProducts() {
     try {
 
       await axios.delete(
-        `http://ecommerce-project-qvh0.onrender.com/delete-product/${id}`
+        `https://ecommerce-project-qvh0.onrender.com/delete-product/${id}`
       );
 
       fetchProducts();
