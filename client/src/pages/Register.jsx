@@ -22,7 +22,7 @@ function Register() {
 
       const response = await axios.post(
 
-        "http://localhost:5000/register",
+        "http://https://ecommerce-project-qvh0.onrender.com/register",
 
         {
           username,
