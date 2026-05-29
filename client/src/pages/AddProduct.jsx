@@ -34,7 +34,7 @@ function AddProduct() {
 
       const response = await axios.post(
 
-        "http://ecommerce-project-qvh0.onrender.com/add-product",
+        "https://ecommerce-project-qvh0.onrender.com/add-product",
 
         formData
 
