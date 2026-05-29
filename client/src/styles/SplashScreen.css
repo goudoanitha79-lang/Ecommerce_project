@@ -1,0 +1,20 @@
+.splash-screen {
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.splash-image {
+  width: 180px;
+  height: 180px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.splash-logo {
+  color: white;
+  font-size: 32px;
+}

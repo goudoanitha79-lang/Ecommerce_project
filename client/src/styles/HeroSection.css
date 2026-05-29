@@ -1,0 +1,16 @@
+.hero-section {
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 1px 0;
+}
+
+.hero-section h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.hero-section p {
+  display: none;
+}
