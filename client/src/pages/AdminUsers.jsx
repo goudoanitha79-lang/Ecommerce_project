@@ -13,7 +13,7 @@ function AdminUsers() {
   useEffect(() => {
 
     axios
-      .get("http://ecommerce-project-qvh0.onrender.com/users")
+      .get("https://ecommerce-project-qvh0.onrender.com/users")
       .then((response) => {
 
         setUsers(response.data);
