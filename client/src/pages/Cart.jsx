@@ -116,7 +116,7 @@ function Cart() {
               >
 
                 <img
-                  src={`http://localhost:5000/uploads/${product.image}`}
+                  src={`http://https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
                   alt={product.name}
                   style={{
                     width: "100%",
