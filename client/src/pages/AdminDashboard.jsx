@@ -1,141 +1,130 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  const admin = localStorage.getItem("admin");
+useEffect(() => {
 
-if(!admin) {
+```
+const admin = localStorage.getItem("admin");
 
-  window.location.href = "/admin-login";
+if (!admin) {
+
+  navigate("/admin-login");
 
 }
+```
 
-  const handleLogout = () => {
+}, [navigate]);
 
-    localStorage.removeItem("admin");
+const handleLogout = () => {
 
-    navigate("/admin-login");
+```
+localStorage.removeItem("admin");
 
-  };
+navigate("/admin-login");
+```
 
-  const cardStyle = {
+};
 
-    height: "180px",
+const cardStyle = {
 
-    backgroundColor: "white",
+```
+height: "180px",
 
-    borderRadius: "20px",
+backgroundColor: "white",
 
-    display: "flex",
+borderRadius: "20px",
 
-    justifyContent: "center",
+display: "flex",
 
-    alignItems: "center",
+justifyContent: "center",
 
-    fontSize: "24px",
+alignItems: "center",
 
-    fontWeight: "bold",
+fontSize: "24px",
 
-    cursor: "pointer",
+fontWeight: "bold",
 
-    boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
+cursor: "pointer",
 
-    transition: "0.3s"
+boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
 
-  };
+transition: "0.3s"
+```
 
-  return (
+};
+
+return (
+
+```
+<div
+  style={{
+    minHeight: "100vh",
+    backgroundColor: "#f5f5f5",
+    padding: "40px"
+  }}
+>
+
+  <h1
+    style={{
+      textAlign: "center",
+      marginBottom: "50px",
+      fontSize: "40px"
+    }}
+  >
+    Admin Dashboard
+  </h1>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(2, 240px)",
+      justifyContent: "center",
+      gap: "30px"
+    }}
+  >
 
     <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-        padding: "40px"
-      }}
+      onClick={() => navigate("/add-product")}
+      style={cardStyle}
     >
-
-      <h1
-        style={{
-          textAlign: "center",
-          marginBottom: "50px",
-          fontSize: "40px"
-        }}
-      >
-        Admin Dashboard
-      </h1>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 240px)",
-          justifyContent: "center",
-          gap: "30px"
-        }}
-      >
-
-        <div
-          onClick={() => navigate("/add-product")}
-          style={cardStyle}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-          }}
-        >
-          Add Product
-        </div>
-
-        <div
-          onClick={() => navigate("/admin/products")}
-          style={cardStyle}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-          }}
-        >
-          All Products
-        </div>
-
-        <div
-          onClick={() => navigate("/admin/users")}
-          style={cardStyle}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-          }}
-        >
-          User Info
-        </div>
-
-        <div
-          onClick={handleLogout}
-          style={{
-            ...cardStyle,
-            backgroundColor: "black",
-            color: "white"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-          }}
-        >
-          Logout
-        </div>
-
-      </div>
-
+      Add Product
     </div>
 
-  );
+    <div
+      onClick={() => navigate("/admin/products")}
+      style={cardStyle}
+    >
+      All Products
+    </div>
+
+    <div
+      onClick={() => navigate("/admin/users")}
+      style={cardStyle}
+    >
+      User Info
+    </div>
+
+    <div
+      onClick={handleLogout}
+      style={{
+        ...cardStyle,
+        backgroundColor: "black",
+        color: "white"
+      }}
+    >
+      Logout
+    </div>
+
+  </div>
+
+</div>
+```
+
+);
 
 }
 
