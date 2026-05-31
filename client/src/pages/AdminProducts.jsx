@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-
 import axios from "axios";
-
 import { useNavigate } from "react-router-dom";
 
 function AdminProducts() {
@@ -12,9 +10,19 @@ function AdminProducts() {
 
   useEffect(() => {
 
+    const admin = localStorage.getItem("admin");
+
+    if (!admin) {
+
+      navigate("/admin-login");
+
+      return;
+
+    }
+
     fetchProducts();
 
-  }, []);
+  }, [navigate]);
 
   const fetchProducts = () => {
 
@@ -138,7 +146,7 @@ function AdminProducts() {
             >
 
               <img
-                src={`http://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
+                src={`https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
                 alt={product.name}
                 style={{
                   width: "100%",
@@ -193,14 +201,7 @@ function AdminProducts() {
                     color: "white",
                     border: "none",
                     borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "0.3s ease"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "scale(1.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)";
+                    cursor: "pointer"
                   }}
                 >
                   Edit
@@ -214,14 +215,7 @@ function AdminProducts() {
                     color: "white",
                     border: "none",
                     borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "0.3s ease"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "scale(1.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)";
+                    cursor: "pointer"
                   }}
                 >
                   Delete
