@@ -1,19 +1,26 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import axios from "axios";
-
 import { useNavigate } from "react-router-dom";
 
 function AddProduct() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+
+    const admin = localStorage.getItem("admin");
+
+    if (!admin) {
+
+      navigate("/admin-login");
+
+    }
+
+  }, [navigate]);
+
   const [name, setName] = useState("");
-
   const [price, setPrice] = useState("");
-
   const [description, setDescription] = useState("");
-
   const [image, setImage] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -23,28 +30,22 @@ function AddProduct() {
     const formData = new FormData();
 
     formData.append("name", name);
-
     formData.append("price", price);
-
     formData.append("description", description);
-
     formData.append("image", image);
 
     try {
 
       const response = await axios.post(
-
         "https://ecommerce-project-qvh0.onrender.com/add-product",
-
         formData
-
       );
 
       alert(response.data);
 
       navigate("/admin/products");
 
-    } catch(error) {
+    } catch (error) {
 
       console.log(error);
 
@@ -82,12 +83,6 @@ function AddProduct() {
             cursor: "pointer",
             transition: "0.3s ease"
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-          }}
         >
           ← Back
         </button>
@@ -113,20 +108,11 @@ function AddProduct() {
           backgroundColor: "white",
           padding: "40px",
           borderRadius: "20px",
-          boxShadow: "0px 4px 15px rgba(0,0,0,0.08)",
-          transition: "0.3s ease"
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "scale(1.01)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "scale(1)";
+          boxShadow: "0px 4px 15px rgba(0,0,0,0.08)"
         }}
       >
 
-        <form
-          onSubmit={handleSubmit}
-        >
+        <form onSubmit={handleSubmit}>
 
           <div
             style={{
@@ -211,14 +197,7 @@ function AddProduct() {
               border: "none",
               borderRadius: "10px",
               cursor: "pointer",
-              fontSize: "16px",
-              transition: "0.3s ease"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.02)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
+              fontSize: "16px"
             }}
           >
             Add Product
