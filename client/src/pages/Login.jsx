@@ -35,12 +35,13 @@ function Login() {
 
       navigate("/home");
 
-    } catch(error) {
-
-      alert("Invalid Email Or Password");
-
-    }
-
+    } catch (error) {
+  if (error.response?.data?.message) {
+    alert(error.response.data.message);
+  } else {
+    alert("Login Failed");
+  }
+}
   };
 
   return (
