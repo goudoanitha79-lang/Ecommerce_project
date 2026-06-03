@@ -1,7 +1,5 @@
 import { useState } from "react";
-
 import axios from "axios";
-
 import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
@@ -9,7 +7,6 @@ function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
@@ -36,12 +33,15 @@ function Login() {
       navigate("/home");
 
     } catch (error) {
-  if (error.response?.data?.message) {
-    alert(error.response.data.message);
-  } else {
-    alert("Login Failed");
-  }
-}
+
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("Login Failed");
+      }
+
+    }
+
   };
 
   return (
