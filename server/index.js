@@ -4,9 +4,12 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const multer = require("multer");
-const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
+// Cloudinary
+const { v2: cloudinary } = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const app = express();
 
@@ -14,7 +17,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_me";
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,
@@ -24,7 +26,7 @@ const db = mysql.createPool({
   port: process.env.MYSQLPORT,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 db.getConnection((err, connection) => {
@@ -36,17 +38,22 @@ db.getConnection((err, connection) => {
   }
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "ecommerce-products",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
 });
 
 const upload = multer({ storage });
-
 // ---------------- REGISTER ----------------
 
 app.post("/register", async (req, res) => {
@@ -76,6 +83,7 @@ app.post("/register", async (req, res) => {
     res.status(500).send("Registration failed");
   }
 });
+
 // ---------------- LOGIN ----------------
 
 app.post("/login", (req, res) => {
@@ -149,6 +157,7 @@ app.get("/products", (req, res) => {
     res.send(result);
   });
 });
+
 // ---------------- ADD PRODUCT ----------------
 
 app.post("/add-product", upload.single("image"), (req, res) => {
@@ -158,7 +167,8 @@ app.post("/add-product", upload.single("image"), (req, res) => {
     return res.status(400).send("Image is required");
   }
 
-  const image = req.file.filename;
+  // Cloudinary image URL
+  const image = req.file.path;
 
   const sql =
     "INSERT INTO products(name, price, image, description) VALUES (?, ?, ?, ?)";
@@ -206,11 +216,10 @@ app.delete("/delete-product/:id", (req, res) => {
     res.send("Product Deleted");
   });
 });
-
 // ---------------- START SERVER ----------------
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server Running On Port ${PORT}`);
+  console.log(`🚀 Server Running On Port ${PORT}`);
 });
