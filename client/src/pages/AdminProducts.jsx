@@ -145,16 +145,16 @@ function AdminProducts() {
               }}
             >
 
-              <img
-                src={product.image}
-                alt={product.name}
-                style={{
-                  width: "100%",
-                  height: "170px",
-                  objectFit: "cover",
-                  borderRadius: "12px"
-                }}
-              />
+             <img
+  src={`https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
+  alt={product.name}
+  style={{
+    width: "100%",
+    height: "170px",
+    objectFit: "cover",
+    borderRadius: "12px"
+  }}
+/>
 
               <h2
                 style={{
