@@ -17,19 +17,27 @@ app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-const db = mysql.createConnection({
+// Using a connection pool instead of a single connection — the pool automatically
+// opens a fresh connection whenever one drops, instead of dying permanently
+// like createConnection() does when the DB host closes an idle connection.
+const db = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT
+  port: process.env.MYSQLPORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-db.connect((err) => {
+// Quick check that the pool can actually reach the database at startup.
+db.getConnection((err, connection) => {
   if (err) {
-    console.log(err);
+    console.error("Database connection failed:", err);
   } else {
     console.log("Database Connected");
+    connection.release();
   }
 });
 
