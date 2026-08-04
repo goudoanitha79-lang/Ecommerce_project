@@ -1,5 +1,15 @@
 // ---------- LOGIN ----------
-app.post("/login", (req, res) => {
+require("dotenv").config();
+
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const app = express(); {
   const { email, password } = req.body;
 
   if (!email || !password) {
