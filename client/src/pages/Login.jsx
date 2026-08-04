@@ -3,49 +3,33 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
-
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
-
     e.preventDefault();
 
     try {
-
       const response = await axios.post(
         "https://ecommerce-project-qvh0.onrender.com/login",
-        {
-          email,
-          password
-        }
+        { email, password }
       );
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(response.data.user)
-      );
+      // Store the JWT token — this is what proves the user is logged in.
+      localStorage.setItem("token", response.data.token);
+
+      // Store non-sensitive user info separately for display purposes (e.g. showing the username).
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
       alert("Login Successful");
-
       navigate("/home");
-
     } catch (error) {
-
-      if (error.response?.data?.message) {
-        alert(error.response.data.message);
-      } else {
-        alert("Login Failed");
-      }
-
+      alert("Invalid Email Or Password");
     }
-
   };
 
   return (
-
     <div
       style={{
         minHeight: "100vh",
@@ -55,7 +39,6 @@ function Login() {
         alignItems: "center"
       }}
     >
-
       <div
         style={{
           width: "350px",
@@ -65,26 +48,14 @@ function Login() {
           boxShadow: "0px 4px 15px rgba(0,0,0,0.1)"
         }}
       >
-
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "30px",
-            color: "#222"
-          }}
-        >
+        <h1 style={{ textAlign: "center", marginBottom: "30px", color: "#222" }}>
           User Login
         </h1>
 
         <form
           onSubmit={handleLogin}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "18px"
-          }}
+          style={{ display: "flex", flexDirection: "column", gap: "18px" }}
         >
-
           <input
             type="email"
             placeholder="Enter Email"
@@ -134,44 +105,23 @@ function Login() {
           >
             Login
           </button>
-
         </form>
 
-        <p
-          style={{
-            textAlign: "center",
-            marginTop: "20px",
-            color: "#555"
-          }}
-        >
+        <p style={{ textAlign: "center", marginTop: "20px", color: "#555" }}>
           Don't have an account?
         </p>
 
-        <div
-          style={{
-            textAlign: "center"
-          }}
-        >
-
+        <div style={{ textAlign: "center" }}>
           <Link
             to="/register"
-            style={{
-              textDecoration: "none",
-              color: "black",
-              fontWeight: "bold"
-            }}
+            style={{ textDecoration: "none", color: "black", fontWeight: "bold" }}
           >
             Register Here
           </Link>
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 }
 
 export default Login;
