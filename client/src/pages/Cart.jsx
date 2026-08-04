@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 
 function Cart() {
@@ -26,7 +25,7 @@ function Cart() {
 
     const updatedCart = [...cart];
 
-    if(updatedCart[index].quantity > 1) {
+    if (updatedCart[index].quantity > 1) {
 
       updatedCart[index].quantity -= 1;
 
@@ -116,7 +115,7 @@ function Cart() {
               >
 
                 <img
-                  src={`https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
+                  src={product.image}
                   alt={product.name}
                   style={{
                     width: "100%",
