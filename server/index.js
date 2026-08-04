@@ -6,17 +6,15 @@ const cors = require("cors");
 const multer = require("multer");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-// Cloudinary
-const { v2: cloudinary } = require("cloudinary");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const path = require("path");
 
 const app = express();
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_me";
-
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
+
+const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_me";
 
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,
@@ -37,20 +35,13 @@ db.getConnection((err, connection) => {
     connection.release();
   }
 });
-
-// Cloudinary Configuration
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "ecommerce-products",
-    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
   },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
 });
 
 const upload = multer({ storage });
@@ -167,8 +158,8 @@ app.post("/add-product", upload.single("image"), (req, res) => {
     return res.status(400).send("Image is required");
   }
 
-  // Cloudinary image URL
-  const image = req.file.path;
+ 
+  const image = req.file.filename;
 
   const sql =
     "INSERT INTO products(name, price, image, description) VALUES (?, ?, ?, ?)";
