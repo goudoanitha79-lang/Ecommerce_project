@@ -114,19 +114,17 @@ function Cart() {
                 }}
               >
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  style={{
-                    width: "100%",
-                    height: "140px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    transition: "0.3s ease"
-                  }}
-                />
-
-                <h3
+               <img
+  src={`https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
+  alt={product.name}
+  style={{
+    width: "100%",
+    height: "140px",
+    objectFit: "cover",
+    borderRadius: "12px",
+    transition: "0.3s ease"
+  }}
+/>
                   style={{
                     margin: "12px 0 6px 0",
                     fontSize: "18px",
