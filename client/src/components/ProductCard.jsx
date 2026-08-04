@@ -21,7 +21,7 @@ function ProductCard({ product, addToCart }) {
     >
 
       <img
-        src={`https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
+        src={product.image}
         alt={product.name}
         style={{
           width: "100%",
