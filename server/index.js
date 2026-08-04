@@ -1,271 +1,183 @@
+require("dotenv").config();
+
 const express = require("express");
-
 const mysql = require("mysql2");
-
 const cors = require("cors");
-
 const multer = require("multer");
-
 const path = require("path");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
+// Keep this secret in your .env file as JWT_SECRET — never hardcode it in real projects.
+const JWT_SECRET = process.env.JWT_SECRET || "dev_secret_change_me";
+
 app.use(cors());
-
 app.use(express.json());
-
 app.use("/uploads", express.static("uploads"));
 
 const db = mysql.createConnection({
-
   host: process.env.MYSQLHOST,
-
   user: process.env.MYSQLUSER,
-
   password: process.env.MYSQLPASSWORD,
-
   database: process.env.MYSQLDATABASE,
-
   port: process.env.MYSQLPORT
-
 });
 
 db.connect((err) => {
-
-  if(err) {
-
+  if (err) {
     console.log(err);
-
   } else {
-
     console.log("Database Connected");
-
   }
-
 });
 
 const storage = multer.diskStorage({
-
   destination: (req, file, cb) => {
-
     cb(null, "uploads");
-
   },
-
   filename: (req, file, cb) => {
-
     cb(null, Date.now() + path.extname(file.originalname));
-
   }
-
 });
 
-const upload = multer({
+const upload = multer({ storage: storage });
 
-  storage: storage
-
-});
-
-app.post("/register", (req, res) => {
-
+// ---------- REGISTER ----------
+app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
 
-  const sql =
-    "INSERT INTO users(username, email, password) VALUES (?, ?, ?)";
+  if (!username || !email || !password) {
+    return res.status(400).send("Username, email and password are required");
+  }
 
-  db.query(
+  try {
+    // Hash the password with a salt round of 10 — never store plain text passwords.
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    sql,
+    const sql =
+      "INSERT INTO users(username, email, password) VALUES (?, ?, ?)";
 
-    [username, email, password],
-
-    (err, result) => {
-
-      if(err) {
-
-        res.send(err.sqlMessage);
-
+    db.query(sql, [username, email, hashedPassword], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Registration failed");
       } else {
-
         res.send("User Registered");
-
       }
-
-    }
-
-  );
-
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Registration failed");
+  }
 });
 
+// ---------- LOGIN ----------
 app.post("/login", (req, res) => {
-
   const { email, password } = req.body;
 
-  const sql =
-    "SELECT * FROM users WHERE email = ? AND password = ?";
+  if (!email || !password) {
+    return res.status(400).send("Email and password are required");
+  }
 
-  db.query(
+  const sql = "SELECT * FROM users WHERE email = ?";
 
-    sql,
-
-    [email, password],
-
-    (err, result) => {
-
-      if(err) {
-
-        res.send(err);
-
-      } else {
-
-        if(result.length > 0) {
-
-          res.send(result);
-
-        } else {
-
-          res.send("Invalid Credentials");
-
-        }
-
-      }
-
+  db.query(sql, [email], async (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Login failed");
     }
 
-  );
+    if (result.length === 0) {
+      return res.status(401).send("Invalid Credentials");
+    }
 
+    const user = result[0];
+
+    // Compare the plain text password against the stored bcrypt hash.
+    const passwordMatches = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatches) {
+      return res.status(401).send("Invalid Credentials");
+    }
+
+    // Issue a JWT instead of sending back the raw user row (which includes the password hash).
+    const token = jwt.sign(
+      { id: user.id, email: user.email, username: user.username },
+      JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.send({
+      token,
+      user: { id: user.id, username: user.username, email: user.email }
+    });
+  });
 });
 
 app.get("/users", (req, res) => {
-
   const sql = "SELECT * FROM users";
-
   db.query(sql, (err, result) => {
-
-    if(err) {
-
+    if (err) {
       res.send(err);
-
     } else {
-
       res.send(result);
-
     }
-
   });
-
 });
 
 app.get("/products", (req, res) => {
-
   const sql = "SELECT * FROM products";
-
   db.query(sql, (err, result) => {
-
-    if(err) {
-
+    if (err) {
       res.send(err);
-
     } else {
-
       res.send(result);
-
     }
-
   });
-
 });
 
 app.post("/add-product", upload.single("image"), (req, res) => {
-
   const { name, price, description } = req.body;
-
   const image = req.file.filename;
-
   const sql =
     "INSERT INTO products(name, price, image, description) VALUES (?, ?, ?, ?)";
-
-  db.query(
-
-    sql,
-
-    [name, price, image, description],
-
-    (err, result) => {
-
-      if(err) {
-
-        res.send(err);
-
-      } else {
-
-        res.send("Product Added");
-
-      }
-
+  db.query(sql, [name, price, image, description], (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send("Product Added");
     }
-
-  );
-
+  });
 });
 
 app.put("/update-product/:id", (req, res) => {
-
   const id = req.params.id;
-
   const { name, price, description } = req.body;
-
   const sql =
     "UPDATE products SET name=?, price=?, description=? WHERE id=?";
-
-  db.query(
-
-    sql,
-
-    [name, price, description, id],
-
-    (err, result) => {
-
-      if(err) {
-
-        res.send(err);
-
-      } else {
-
-        res.send("Product Updated");
-
-      }
-
+  db.query(sql, [name, price, description, id], (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send("Product Updated");
     }
-
-  );
-
+  });
 });
 
 app.delete("/delete-product/:id", (req, res) => {
-
   const id = req.params.id;
-
   const sql = "DELETE FROM products WHERE id = ?";
-
   db.query(sql, [id], (err, result) => {
-
-    if(err) {
-
+    if (err) {
       res.send(err);
-
     } else {
-
       res.send("Product Deleted");
-
     }
-
   });
-
 });
 
 app.listen(5000, () => {
-
   console.log("Server Running On Port 5000");
-
 });
