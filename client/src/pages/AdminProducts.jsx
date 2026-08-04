@@ -51,7 +51,7 @@ function AdminProducts() {
 
       fetchProducts();
 
-    } catch(error) {
+    } catch (error) {
 
       console.log(error);
 
@@ -146,7 +146,7 @@ function AdminProducts() {
             >
 
               <img
-                src={`https://ecommerce-project-qvh0.onrender.com/uploads/${product.image}`}
+                src={product.image}
                 alt={product.name}
                 style={{
                   width: "100%",
